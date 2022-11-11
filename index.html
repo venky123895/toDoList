@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To Do</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      background-color: #f6f6f6;
+    }
+
+    .main-container {
+      width: 80vw;
+      padding: 20px;
+    }
+
+    .top-container {
+      margin-bottom: 40px;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .heading-container {
+      display: flex;
+      flex: 1;
+      align-items: center;
+    }
+
+    .search-icon-container {
+      background-color: rgb(242, 243, 245);
+      border-radius: 50%;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .heading {
+      margin-left: 8px;
+    }
+
+    .new-list-text {
+      color: rgb(185, 185, 185);
+    }
+
+    .new-list-button {
+      color: rgb(99, 120, 216);
+      background-color: rgb(244, 245, 247);
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: 0px 4px;
+      font-weight: 600;
+    }
+    .list-container {
+      display: flex;
+      gap: 16px;
+      height: calc(100vh - 200px);
+      overflow: auto;
+    }
+    .list {
+      min-width: 200px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+    }
+    .list-heading-container {
+      display: flex;
+      padding: 8px 12px;
+      background-color: rgb(243, 243, 245);
+      border-radius: 4px;
+      align-items: center;
+      margin-bottom: 16px;
+      box-shadow: 0px 0px 2px 0.25px rgb(163, 163, 163);
+    }
+    .list-heading {
+      flex: 1;
+      color: rgb(73, 74, 74);
+    }
+    .number-of-tasks-container {
+      background-color: #000;
+      border-radius: 4px;
+      padding: 4px 8px;
+    }
+    .number-of-tasks {
+      color: #fff;
+      font-size: 12px;
+    }
+    .add-task-button {
+      border: 1px dashed rgb(185, 185, 185);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+    }
+    .add-task-button-text {
+      font-size: 36px;
+      color: rgb(185, 185, 185);
+      font-weight: 400;
+    }
+    .task-container {
+      flex: 1;
+      margin-bottom: 16px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .task {
+      border-radius: 8px;
+      background-color: white;
+      height: 100px;
+      box-shadow: 0px 0px 1px 1px rgb(163, 163, 163);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+    }
+    .task-title {
+      flex: 1;
+      font-size: 14px;
+    }
+    .task-date {
+      border-radius: 4px;
+      border: none;
+      background-color: #fb882f;
+      color: white;
+      height: 30px;
+    }
+    .date-picker {
+      width: 0;
+      height: 0;
+      border: none;
+    }
+  </style>
+  <body>
+    <div class="main-container">
+      <div class="top-container">
+        <div class="header-container">
+          <div class="heading-container">
+            <img
+              src="check-mark.png"
+              width="28px"
+              height="28px"
+            />
+            <h1 class="heading">Daily task</h1>
+          </div>
+          <div class="search-icon-container">
+            <img
+              src="magnifying-glass.png"
+              class="search-icon"
+            />
+          </div>
+        </div>
+        <p class="new-list-text">
+          Click
+          <button class="new-list-button" onclick="addNewList()">+ New</button>
+          To create new list and wait for project manager card. <br />
+          Don't create a card by yourself to manage a good colaboration.
+        </p>
+      </div>
+      <div class="list-container"></div>
+    </div>
+    <script>
+      function addNewList() {
+        const list = document.createElement("div"); // <div></div>
+        list.setAttribute("class", "list"); // <div class="list"> </div>
+        list.innerHTML = `<div class="list-heading-container">
+              <h4 class="list-heading" contenteditable>New list</h4>
+              <div class="number-of-tasks-container">
+                <h4 class="number-of-tasks">0</h4>
+              </div>
+            </div>
+            <div class="task-container">
+            </div>
+            `;
+        const createTaskButton = document.createElement("div");
+        createTaskButton.setAttribute("class", "add-task-button");
+        createTaskButton.innerHTML = `<h4 class="add-task-button-text">+</h4>`;
+        createTaskButton.addEventListener("click", () => {
+          addTask(list);
+        });
+        list.appendChild(createTaskButton);
+        const listContainer =
+          document.getElementsByClassName("list-container")[0];
+        listContainer.appendChild(list);
+      }
+
+      function addTask(list) {
+        //create task
+        const task = document.createElement("div");
+        task.setAttribute("class", "task");
+        task.innerHTML = `<h4 class="task-title" contenteditable>New task</h4>
+            <button class="task-date">${new Date().toLocaleDateString()}</button>`;
+        insertDatePicker(task); //insert date picker
+        // insert task
+        const taskContainer = list.getElementsByClassName("task-container")[0];
+        taskContainer.appendChild(task);
+        // increase task counter
+        const numberOfTasks = list.getElementsByClassName("number-of-tasks")[0];
+        numberOfTasks.innerText = Number(numberOfTasks.innerText) + 1;
+      }
+
+      function insertDatePicker(task) {
+        //create date picker
+        const datePicker = document.createElement("input");
+        datePicker.setAttribute("class", "date-picker");
+        datePicker.setAttribute("type", "date");
+        datePicker.addEventListener("change", (e) => {
+          task.getElementsByClassName("task-date")[0].innerText =
+            e.target.value;
+        });
+        //insert date picker to task button
+        task.appendChild(datePicker);
+        // opens date picker modal on click of task button
+        task
+          .getElementsByClassName("task-date")[0]
+          .addEventListener("click", () => {
+            showDatePicker(datePicker);
+          });
+      }
+
+      function showDatePicker(datePicker) {
+        datePicker.showPicker();
+      }
+    </script>
+  </body>
+</html>
